@@ -15,7 +15,9 @@ API_KEY = os.getenv('ALPHA_VANTAGE_API_KEY')
 # The postgres connection id
 postgres_id = 'postgres_id'
 
+# The stock ticker
 ticker = "AAPL"
+
 def get_data(**kwargs):
     """ This fuction is used to get data from the API """
     import pandas as pd
@@ -30,6 +32,8 @@ def get_data(**kwargs):
     kwargs['ti'].xcom_push(key='stock_data', value=df)
     return df
 
+
+
 def process_data(**kwargs):
     """ This function is used to process the data """
     df = kwargs['ti'].xcom_pull(key='stock_data', task_ids='Get_data')
@@ -42,6 +46,8 @@ def process_data(**kwargs):
     kwargs['ti'].xcom_push(key='processed_stock_data', value=df)
     return df
 
+
+
 # Define the function to load the data into the database
 def load_data(**kwargs):
     df = kwargs['ti'].xcom_pull(key='processed_stock_data', task_ids='process_data')
@@ -50,7 +56,7 @@ def load_data(**kwargs):
     conn = pg_hook.get_conn()
     cursor = conn.cursor()
 
-        # Create table if it doesn't exist
+    # Create table if it doesn't exist
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS stocks (
     timestamp TIMESTAMP PRIMARY KEY,
