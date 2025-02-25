@@ -1,0 +1,6 @@
+postgres:
+    port: "8089"
+project:
+    name: alphavantage
+webserver:
+    port: "8088"
